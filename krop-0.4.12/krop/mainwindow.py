@@ -460,12 +460,21 @@ class MainWindow(QKMainWindow):
 
     def getPadding(self):
         """Return [dw, dh] tuple specifying padding for trimming margins."""
-        padding = [ float(a) for a in self.ui.editPadding.text().split(',') ]
-        if len(padding) == 0:
-            return [0, 0]
-        if len(padding) == 1:
-            return 2*padding
-        return padding
+
+        """If empty string"""
+        if not self.ui.editPadding.text():
+            return [0,0]
+        padding = self.ui.editPadding.text().split(',')
+        if not len(padding) == 0:
+            try:
+                padding = [ float(a) for a in padding]
+            except ValueError:
+                QMessageBox.warning(self, self.tr("One of the margin values wasn't a float"),
+                    self.tr("One of the margin values wasn't a number. Please double check their values"))
+                return [0,0]
+            if len(padding) == 1:
+                return 2*padding
+            return padding
 
     def slotTrimMarginsAll(self):
         # trim margins of all selections on the current page
