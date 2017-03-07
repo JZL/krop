@@ -727,6 +727,7 @@ p, li { white-space: pre-wrap; margin: 0; }
    </attribute>
    <addaction name="actionOpenFile"/>
    <addaction name="actionKrop"/>
+   <addaction name="actionKropNup"/>
    <addaction name="actionZoomIn"/>
    <addaction name="actionZoomOut"/>
    <addaction name="actionFitInView"/>
@@ -785,6 +786,14 @@ p, li { white-space: pre-wrap; margin: 0; }
    </property>
    <property name="text">
     <string>Krop!</string>
+   </property>
+  </action>
+  <action name="actionKropNup">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Krop w NUP!</string>
    </property>
   </action>
   <action name="actionDeleteSelection">

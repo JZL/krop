@@ -13,6 +13,7 @@ the Free Software Foundation; either version 3 of the License, or
 (at your option) any later version.
 """
 
+import subprocess, os
 from os.path import exists, splitext
 try:
     str_unicode = unicode
@@ -151,6 +152,7 @@ class MainWindow(QKMainWindow):
         self.connect(self.ui.actionOpenFile, SIGNAL("triggered()"), self.slotOpenFile)
         self.connect(self.ui.actionSelectFile, SIGNAL("triggered()"), self.slotSelectFile)
         self.connect(self.ui.actionKrop, SIGNAL("triggered()"), self.slotKrop)
+        self.connect(self.ui.actionKropNup, SIGNAL("triggered()"), self.slotKropNup)
         self.connect(self.ui.actionZoomIn, SIGNAL("triggered()"), self.slotZoomIn)
         self.connect(self.ui.actionZoomOut, SIGNAL("triggered()"), self.slotZoomOut)
         self.connect(self.ui.actionFitInView, SIGNAL("toggled(bool)"), self.slotFitInView)
@@ -224,6 +226,7 @@ class MainWindow(QKMainWindow):
             self.updateControls()
             self.slotFitInView(self.ui.actionFitInView.isChecked())
             self.ui.actionKrop.setEnabled(True)
+            self.ui.actionKropNup.setEnabled(True)
 
     def slotOpenFile(self):
         fileName = QFileDialog.getOpenFileName(self,
@@ -291,6 +294,60 @@ class MainWindow(QKMainWindow):
                     self.tr("The following unexpected error has occured:"
                     "\n\n{0}").format(err))
             raise err
+
+    def slotKropNup(self):
+            #self.slotKrop()
+        # file names
+        inputFileName = str_unicode(self.fileName)
+        outputFileName = str_unicode(self.ui.editFile.text())
+
+        # which pages
+        s = str(self.ui.editWhichPages.text())
+        if not s:
+            pages = range(0, self.viewer.numPages())
+        else:
+            pages = self.str2pages(s)
+
+        # rotate
+        rotation = [0, 270, 90, 180][self.ui.comboRotation.currentIndex()]
+
+        # Done when selecting filename.
+        # if exists(outputFileName):
+        #     QMessageBox.warning(self, self.tr("Overwrite File?"),
+        #             self.tr("A file named \"...\" already exists. Are you sure you want to overwrite it?"))
+        #     return
+
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+        try:
+            pdf = PdfFile()
+            pdf.loadFromFile(inputFileName)
+            cropper = PdfCropper()
+            for nr in pages:
+                c = self.viewer.cropValues(nr)
+                cropper.addPageCropped(pdf, nr, c, rotate=rotation)
+            cropper.writeToFile(outputFileName+".NoNup.pdf")
+            handle = subprocess.Popen(["pdfjam","--landscape", "--keepinfo",  "--frame", "true", outputFileName+".NoNup.pdf", "--suffix", "nup", "--nup", "2x1", "-o", outputFileName], stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+            output = handle.communicate()[0]
+            if handle.returncode != 0:
+                QMessageBox.warning(self, self.tr("Problem with NUP"),
+                    self.tr("An error occured while writing the nupped PDF. "
+                        "\n\nThe official error is:\n\n{0}").format(errs))
+
+            QApplication.restoreOverrideCursor()
+        except IOError as err:
+            QApplication.restoreOverrideCursor()
+            QMessageBox.warning(self, self.tr("Could not write cropped PDF"),
+                    self.tr("An error occured while writing the cropped PDF. "
+                        "Please make sure that you have permission to write to "
+                        "the selected file."
+                        "\n\nThe official error is:\n\n{0}").format(err))
+        except Exception as err:
+            QApplication.restoreOverrideCursor()
+            QMessageBox.warning(self, self.tr("Something got in our way"),
+                    self.tr("The following unexpected error has occured:"
+                    "\n\n{0}").format(err))
+            raise err
+
 
     def slotZoomIn(self):
         self.ui.actionFitInView.setChecked(False)
