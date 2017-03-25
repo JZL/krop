@@ -14,6 +14,7 @@ the Free Software Foundation; either version 3 of the License, or
 """
 
 import subprocess, os
+from PyQt5.QtWidgets import *
 from os.path import exists, splitext
 try:
     str_unicode = unicode
@@ -21,8 +22,8 @@ except:
     str_unicode = str
 
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 
 from krop.config import KDE
 if KDE:
@@ -149,29 +150,29 @@ class MainWindow(QKMainWindow):
             self.ui.buttonLast.setFlat(False)
 
 
-        self.connect(self.ui.actionOpenFile, SIGNAL("triggered()"), self.slotOpenFile)
-        self.connect(self.ui.actionSelectFile, SIGNAL("triggered()"), self.slotSelectFile)
-        self.connect(self.ui.actionKrop, SIGNAL("triggered()"), self.slotKrop)
-        self.connect(self.ui.actionKropNup, SIGNAL("triggered()"), self.slotKropNup)
-        self.connect(self.ui.actionZoomIn, SIGNAL("triggered()"), self.slotZoomIn)
-        self.connect(self.ui.actionZoomOut, SIGNAL("triggered()"), self.slotZoomOut)
-        self.connect(self.ui.actionFitInView, SIGNAL("toggled(bool)"), self.slotFitInView)
-        self.connect(self.ui.actionPreviousPage, SIGNAL("triggered()"), self.slotPreviousPage)
-        self.connect(self.ui.actionNextPage, SIGNAL("triggered()"), self.slotNextPage)
-        self.connect(self.ui.actionFirstPage, SIGNAL("triggered()"), self.slotFirstPage)
-        self.connect(self.ui.actionLastPage, SIGNAL("triggered()"), self.slotLastPage)
-        self.connect(self.ui.actionDeleteSelection, SIGNAL("triggered()"), self.slotDeleteSelection)
-        self.connect(self.ui.actionTrimMargins, SIGNAL("triggered()"), self.slotTrimMargins)
-        self.connect(self.ui.actionTrimMarginsAll, SIGNAL("triggered()"), self.slotTrimMarginsAll)
-        self.connect(self.ui.documentView, SIGNAL('customContextMenuRequested(const QPoint&)'), self.slotContextMenu)
-        self.connect(self.ui.editCurrentPage, SIGNAL('textEdited(const QString&)'), self.slotCurrentPageEdited)
-        self.connect(self.ui.radioSelAll, SIGNAL("toggled(bool)"), self.slotSelectionMode)
-        self.connect(self.ui.radioSelEvenOdd, SIGNAL("toggled(bool)"), self.slotSelectionMode)
-        self.connect(self.ui.radioSelIndividual, SIGNAL("toggled(bool)"), self.slotSelectionMode)
+        self.ui.actionOpenFile.triggered.connect(self.slotOpenFile)
+        self.ui.actionSelectFile.triggered.connect(self.slotSelectFile)
+        self.ui.actionKrop.triggered.connect(self.slotKrop)
+        self.ui.actionKropNup.triggered.connect(self.slotKropNup)
+        self.ui.actionZoomIn.triggered.connect(self.slotZoomIn)
+        self.ui.actionZoomOut.triggered.connect(self.slotZoomOut)
+        self.ui.actionFitInView.toggled[bool].connect(self.slotFitInView)
+        self.ui.actionPreviousPage.triggered.connect(self.slotPreviousPage)
+        self.ui.actionNextPage.triggered.connect(self.slotNextPage)
+        self.ui.actionFirstPage.triggered.connect(self.slotFirstPage)
+        self.ui.actionLastPage.triggered.connect(self.slotLastPage)
+        self.ui.actionDeleteSelection.triggered.connect(self.slotDeleteSelection)
+        self.ui.actionTrimMargins.triggered.connect(self.slotTrimMargins)
+        self.ui.actionTrimMarginsAll.triggered.connect(self.slotTrimMarginsAll)
+        self.ui.documentView.customContextMenuRequested[QPoint].connect(self.slotContextMenu)
+        self.ui.editCurrentPage.textEdited['QString'].connect(self.slotCurrentPageEdited)
+        self.ui.radioSelAll.toggled[bool].connect(self.slotSelectionMode)
+        self.ui.radioSelEvenOdd.toggled[bool].connect(self.slotSelectionMode)
+        self.ui.radioSelIndividual.toggled[bool].connect(self.slotSelectionMode)
         # self.connect(self.ui.editSelExceptions, SIGNAL("editingFinished()"), self.slotSelExceptionsChanged)
-        self.connect(self.ui.editSelExceptions, SIGNAL('textEdited(const QString&)'), self.slotSelExceptionsEdited)
-        self.connect(self.ui.comboDevice, SIGNAL("currentIndexChanged(int)"), self.slotDeviceTypeChanged)
-        self.connect(self.ui.editAspectRatio, SIGNAL("editingFinished()"), self.slotAspectRatioChanged)
+        self.ui.editSelExceptions.textEdited['QString'].connect(self.slotSelExceptionsEdited)
+        self.ui.comboDevice.currentIndexChanged[int].connect(self.slotDeviceTypeChanged)
+        self.ui.editAspectRatio.editingFinished.connect(self.slotAspectRatioChanged)
 
         self.pdfScene = QGraphicsScene(self.ui.documentView)
         self.pdfScene.setBackgroundBrush(self.pdfScene.palette().dark())
@@ -230,12 +231,12 @@ class MainWindow(QKMainWindow):
 
     def slotOpenFile(self):
         fileName = QFileDialog.getOpenFileName(self,
-             self.tr("Open PDF"), "", self.tr("PDF Files (*.pdf)"));
+             self.tr("Open PDF"), "", self.tr("PDF Files (*.pdf)"));[0]
         self.openFile(fileName)
 
     def slotSelectFile(self):
         fileName = QFileDialog.getSaveFileName(self,
-                self.tr("Save cropped PDF to ..."), "", self.tr("PDF Files (*.pdf)"))
+                self.tr("Save cropped PDF to ..."), "", self.tr("PDF Files (*.pdf)"))[0]
                 # None, QFileDialog.DontConfirmOverwrite)
         self.ui.editFile.setText(fileName)
 

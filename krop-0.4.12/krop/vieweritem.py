@@ -13,8 +13,9 @@ the Free Software Foundation; either version 3 of the License, or
 (at your option) any later version.
 """
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 
 try:
     from popplerqt4 import Poppler

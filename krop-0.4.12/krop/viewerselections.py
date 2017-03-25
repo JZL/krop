@@ -14,9 +14,10 @@ the Free Software Foundation; either version 3 of the License, or
 """
 
 from math import ceil
+from PyQt5.QtWidgets import *
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 
 
 class ViewerSelections(object):

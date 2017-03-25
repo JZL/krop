@@ -51,7 +51,7 @@ def main():
         KCmdLineArgs.init(aboutData)
         app = KApplication()
     else:
-        from PyQt4.QtGui import QApplication
+        from PyQt5.QtWidgets import QApplication
         app = QApplication(sys.argv)
         app.setApplicationName("krop")
 
