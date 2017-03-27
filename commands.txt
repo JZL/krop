@@ -1,0 +1,3 @@
+pyuic* mainwindow.ui > mainwundowui.py
+
+python -m krop
