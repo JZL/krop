@@ -326,7 +326,7 @@ class MainWindow(QKMainWindow):
                 c = self.viewer.cropValues(nr)
                 cropper.addPageCropped(pdf, nr, c, rotate=rotation)
             cropper.writeToFile(outputFileName+".NoNup.pdf")
-            handle = subprocess.Popen(["pdfjam","--landscape", "--keepinfo",  "--frame", "true", outputFileName+".NoNup.pdf", "--suffix", "nup", "--nup", "2x1", "-o", outputFileName], stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+            handle = subprocess.Popen(["pdfjam","--landscape", "--keepinfo", outputFileName+".NoNup.pdf", "--suffix", "nup", "--nup", "2x1", "-o", outputFileName], stdout=subprocess.PIPE,stderr=subprocess.PIPE)
             output = handle.communicate()[0]
             if handle.returncode != 0:
                 QMessageBox.warning(self, self.tr("Problem with NUP"),
